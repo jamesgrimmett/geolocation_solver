@@ -3,7 +3,7 @@ class InsufficientDataError(Exception):
         self.message = message
         super().__init__(self.message)
 
-class UnkownCaseError(Exception):
+class UnknownCaseError(Exception):
     def __init__(self, message="Unknown problem setup"):
         self.message = message
         super().__init__(self.message)

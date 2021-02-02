@@ -52,6 +52,9 @@ def geographic2geodetic(lat):
     """
     Converts geographic latitude (radians) to geodetic latitude (radians).
     Eq. 58 of Ho & Chan (1997).
+
+    Args:
+        lat: Latitude in degrees (neg. south) [-90,90]
     """
 
     ecc = earth_model.ecc
