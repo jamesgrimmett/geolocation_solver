@@ -1,7 +1,11 @@
 # geolocation_solver
-Geolocation using TDOA and FDOA.
+Multilateration solver for the geolocation of an emitting object given the TDoA alone, or in combination with FDoA, of the signal measured by multiple recievers. Implemented in Python.
 
-**Under construction**
+Solvers:
 
-The geolocation solution outlined by [Ho & Chan (1997)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=599239) is implemented in Python.
-This algorithm can solve for the location of an emitter with a *known altitude*, given the TDOA alone, or in combination with the FDOA, of the signal recieved by at least three satellites. The location and velocity of the satellites must also be known.  
+| Algorithm         | Constraints                                                                       | Notes                                     | Status        |
+| -------------     | --------------------------------------------------------------------------------- | ----------------------------------------- | ------------- |
+| TDoA algorithm[1] | Emitter altitude must be known (can be zero). Limited to max. 3 receivers.        | Will be extended to allow > 3 recievers   | Available     |
+| FDoA algorithm[1] | Emitter altitude must be known (can be zero). Satellite velocities must be known. |                                           | In-progress   |
+| Least squares     |                                                                                   |                                           | Planned       |
+[1] The geolocation solution outlined by [Ho & Chan (1997)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=599239).
