@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import numpy as np
 from . import verify
-from ..utils import constants, io, error_handling
+from ..utils import constants, io, error_handling, conversion
 
 
 class Solver(object):
@@ -293,9 +293,12 @@ class Solver(object):
         newline = "\n"  # \escapes are not allowed inside f-strings
         #print(f'{newline.join(f"{s}" for s in solution)}')     
         strs = ["x: " + str(s[0]) + " m,\n" + "y: " + str(s[1]) + " m,\n" + "z: " + str(s[2]) + " m.\n" for s in solution] 
+        lat, lon, h = conversion.cartesian2geographic(x = solution[:,0], y = solution[:,1], z = solution[:,2])
+        strs_geo = ["h: " + str(h_) + " m,\n" + "lat: " + str(lat_) + ",\n" + "lon: " + str(lon_) + ".\n" for h_,lat_,lon_ in zip(h, lat, lon)] 
         #print(f'{newline.join(f"{s}" for s in strs)}')
         for i, s in enumerate(solution):
             print(f"Solution #{i}:\n")
             print(strs[i])
+            print(strs_geo[i])
             print(f"TDoA relative error (max.): {np.max(error[i])}\n\n")
 

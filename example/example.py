@@ -5,6 +5,8 @@ to verify the accuracy of the solution.
 """
 
 import os
+import numpy as np
+import pandas as pd
 from geolocation.solver import verify, solver, system
 from geolocation.utils import io, auxiliary
 
@@ -15,35 +17,40 @@ lon_emitter = 75.9
 dir = os.path.abspath(os.path.dirname(__file__))
 
 def main():
-    # Load satellite (receiver) data.
-    sat_data = io.load_csv_generic(filepath = './data/example_satellites.csv')
+    # First three satellites from the example given in 
+    # Section VI of Ho & Chan (1997) 
+    sat_r = [42164, 42164, 42164] #km
+    sat_lat = [2.0, 0.0, 0.0]
+    sat_lon = [-50.0, -47.0, -53.0]
+    # dummy tdoa 
+    tdoa = [0.0, 0.0, 0.0]
 
-    # No. satellite measurements > 3 is not currently implemented
-    sat_data = sat_data.loc[:2].reset_index(drop = True)
+    # Pass satellite data and dummy TDoA to set sat_data dataframe and convert units.
+    sys = system.System(satellite_positions = np.array([sat_r,sat_lat,sat_lon]).T,
+                        is_geographic_coords = True,
+                        r_emitter = r_emitter,
+                        TDoA_data = tdoa,
+                        scale_distance = 1000.0, 
+                        )
 
-    # Scale/modify units. 
-    sat_data = auxiliary.modify_sat_data_units(sat_data = sat_data, 
-                        geographic_coords = True,
-                        scale_r = 1000.0, 
-                        scale_velocity = 1.0/3.6)    
+    sat_data = sys.sat_data
 
-
+    # Generate TDoA data using the known emitter location
     tdoa = verify.generate_TDOA(sat_data = sat_data, 
                 r_emitter = r_emitter,
                 lat_emitter = lat_emitter,
                 lon_emitter = lon_emitter,
                 tdoa_var = 1.e-10)
 
-    sys = system.System(satellite_data_filepath = './data/example_satellites.csv',
-                        satellite_data_scale_r = 1000.0,
-                        satellite_data_scale_velocity = 1.0/3.6,
+    # Reinitialise the system with actual TDoA
+    sys = system.System(satellite_positions = np.array(sat_data[['r','latitude','longitude']]),
+                        is_geographic_coords = True,
                         r_emitter = r_emitter,
                         TDoA_data = tdoa,
-                        n_sats = 3,
                         )
 
+    # Solve.
     s = solver.Solver(sys) 
-
     s.TDoA_solve()
 
 
