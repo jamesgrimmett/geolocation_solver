@@ -12,7 +12,7 @@ Solvers:
 [1] The geolocation solution outlined by [Ho & Chan (1997)](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=599239).
 
 ## Usage example
-Simple example using the data given in the example from Section VI of Ho & Chan
+Simple example using the data given in Section VI of Ho & Chan
 (1997). With a known emitter location and three receivers, generate TDoA data
 and re-calculate the emitter location. 
 ```python
