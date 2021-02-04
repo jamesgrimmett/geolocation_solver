@@ -4,17 +4,14 @@ Here the emitter location is known in advance and we generate the TDOA's.
 to verify the accuracy of the solution.
 """
 
-import os
-import numpy as np
-import pandas as pd
 from geolocation.solver import verify, solver, system
-from geolocation.utils import io, auxiliary
+from geolocation.utils import earth_model
 
-r_emitter = 6367287.0 # meters
+h_emitter = 0.0 # meters above sea level
 lat_emitter = 45.35
 lon_emitter = 75.9
 
-dir = os.path.abspath(os.path.dirname(__file__))
+#dir = os.path.abspath(os.path.dirname(__file__))
 
 def main():
     # First three satellites from the example given in 
@@ -24,6 +21,9 @@ def main():
     sat_lon = [-50.0, -47.0, -53.0]
     # dummy tdoa 
     tdoa = [0.0, 0.0, 0.0]
+
+    r = earth_model.local_earth_radius(lat = lat_emitter, lon = lon_emitter)
+    r_emitter = r - h_emitter
 
     # Pass satellite data and dummy TDoA to set sat_data dataframe and convert units.
     sys = system.System(satellite_positions = np.array([sat_r,sat_lat,sat_lon]).T,
@@ -40,7 +40,7 @@ def main():
                 r_emitter = r_emitter,
                 lat_emitter = lat_emitter,
                 lon_emitter = lon_emitter,
-                tdoa_var = 1.e-10)
+                tdoa_var = 1.e-11)
 
     # Reinitialise the system with actual TDoA
     sys = system.System(satellite_positions = np.array(sat_data[['r','latitude','longitude']]),
