@@ -22,8 +22,8 @@ def main():
     # dummy tdoa 
     tdoa = [0.0, 0.0, 0.0]
 
-    r = earth_model.local_earth_radius(lat = lat_emitter, lon = lon_emitter)
-    r_emitter = r - h_emitter
+    r_local = earth_model.local_earth_radius(lat = lat_emitter, lon = lon_emitter)
+    r_emitter = r_local + h_emitter
 
     # Pass satellite data and dummy TDoA to set sat_data dataframe and convert units.
     sys = system.System(satellite_positions = np.array([sat_r,sat_lat,sat_lon]).T,
